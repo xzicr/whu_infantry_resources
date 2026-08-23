@@ -1,6 +1,8 @@
 #ifndef SHOOT_H
 #define SHOOT_H
-#include "CAN_receive.h"
+#include "gim_cha_protocol.h"
+#include "motor_protocol.h"
+#include "can_service.h"
 #include "pid.h"
 #define MOTOR_ECD_TO_ANGLE          0.00007666
 #define FULL_COUNT                  9.5

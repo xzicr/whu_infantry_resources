@@ -1,107 +1,10 @@
-
-
-#include "CAN_receive.h"
+#include "can_service.h"
 #include "cmsis_os.h"
 #include "main.h"
-#include "detect_task.h"
 #include "chassis_task.h"
 
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
-// motor data read
-#define get_motor_measure(ptr, data)                                             \
-  do                                                                             \
-  {                                                                              \
-    (ptr)->last_ecd = (ptr)->ecd;                                                \
-    (ptr)->ecd = (uint16_t)(((data)[0] << 8) | (data)[1]);                       \
-    (ptr)->speed_rpm = (int16_t)(((data)[2] << 8) | (data)[3]);                  \
-    (ptr)->given_current = (int16_t)(((data)[4] << 8) | (data)[5]);              \
-    (ptr)->temperate = (data)[6];                                                \
-    if ((ptr)->ecd - (ptr)->last_ecd > 4096)                                     \
-    {                                                                            \
-      (ptr)->ecd_count--;                                                        \
-    }                                                                            \
-    else if ((ptr)->ecd - (ptr)->last_ecd < -4096)                               \
-    {                                                                            \
-      (ptr)->ecd_count++;                                                        \
-    }                                                                            \
-    (ptr)->angle = (ptr)->ecd_count * 360.0f +                                   \
-                   (ptr)->ecd * 360.0f / 8192.0f;                                \
-  } while (0)
-
-#define get_lkmotor_measure(ptr, data)                                           \
-  do                                                                             \
-  {                                                                              \
-    (ptr)->temp = (int8_t)(data)[1];                                             \
-    (ptr)->iq = (int16_t)(((data)[3] << 8) | (data)[2]);                         \
-    (ptr)->speed = (int16_t)(((data)[5] << 8) | (data)[4]);                      \
-    (ptr)->last_encoder = (ptr)->encoder;                                        \
-    (ptr)->encoder = (uint16_t)(((data)[7] << 8) | (data)[6]);                   \
-    (ptr)->angle = (float)(ptr)->encoder * 360.0f / 65536.0f;                    \
-  } while (0)
-
-#define get_HT_motor_measure(ptr, data)                                          \
-  do                                                                             \
-  {                                                                              \
-    (ptr)->last_ecd = (ptr)->ecd;                                                \
-    (ptr)->ecd = uint_to_float(                                                  \
-        (uint16_t)(((data)[1] << 8) | (data)[2]), P_MIN, P_MAX, 16) * 180.0f / PI;   \
-    if ((ptr)->ecd > 180.0f)                                                     \
-    {                                                                            \
-      (ptr)->ecd -= 360.0f;                                                      \
-    }                                                                            \
-    if ((ptr)->ecd < -180.0f)                                                    \
-    {                                                                            \
-      (ptr)->ecd += 360.0f;                                                      \
-    }                                                                            \
-    (ptr)->velocity_rad_s = uint_to_float(                                       \
-        (uint16_t)(((data)[3] << 4) | ((data)[4] >> 4)), V_MIN, V_MAX, 12);      \
-    (ptr)->real_torque = uint_to_float(                                          \
-        (uint16_t)((((data)[4] & 0x0FU) << 8) | (data)[5]),                      \
-        T_MIN, T_MAX, 12);                                                       \
-  } while (0)
-
-#define get_superpower_measure(ptr, data)                                        \
-  do                                                                             \
-  {                                                                              \
-    (ptr)->statusCode = (uint8_t)(data)[0];                                      \
-    (ptr)->chassisPower = (uint16_t)((                                           \
-        (((data)[2] << 8) | (data)[1]) - 16384.0f) / 64.0f);                    \
-    (ptr)->refereePower = (uint16_t)((                                           \
-        (((data)[4] << 8) | (data)[3]) - 16384.0f) / 64.0f);                    \
-    (ptr)->chassisPowerLimit =                                                   \
-        (uint16_t)(((data)[6] << 8) | (data)[5]);                                \
-    (ptr)->capEnergy = (uint8_t)(data)[7];                                       \
-  } while (0)
-
-static float TOFSense_ParseDistanceM(uint8_t d0, uint8_t d1, uint8_t d2)
-{
-  uint32_t raw_u24 = (uint32_t)d0 |
-                     ((uint32_t)d1 << 8) |
-                     ((uint32_t)d2 << 16);
-
-  if ((raw_u24 & 0x00800000U) != 0U)
-  {
-    raw_u24 |= 0xFF000000U;
-  }
-
-  return (int32_t)raw_u24 / 1000.0f;
-}
-	
-	
-static uint16_t float_to_uint(float x, float x_min, float x_max, uint8_t bits)
-{
-  float span = x_max - x_min;
-  float offset = x_min;
-
-  return (uint16_t)((x - offset) * ((float)((1 << bits) - 1)) / span);
-}
-static float uint_to_float(int x_int, float x_min, float x_max, int bits)
-{
-  float span = x_max - x_min;
-  float offset = x_min;
-  return ((float)x_int) * span / ((float)((1 << bits) - 1)) + offset;
-}
 
 static CAN_TxHeaderTypeDef gimbal_tx_message;
 static uint8_t gimbal_can_send_data[8];
@@ -114,11 +17,7 @@ motor_measure_t motor_chassis[7];
 lkmotor_measure_t lkmotor_data[2];
 HTmotor_measure_t htmotor_data[4];
 super_power_receive_t super_power_data;
-extern chassis_move_t chassis_move;
-/* 超级电容反馈数据 */
-float Power_data[4];
-uint16_t power_data_temp[4];
-uint32_t cnt;
+
 
 
 
@@ -213,17 +112,17 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         detect_hook(CHASSIS_MOTOR1_TOE + i);
         break;
       }
-      case CAN_DISTANCE_ID:
-      {
-        uint8_t dis_status = rx_data[3];
+      // case CAN_DISTANCE_ID:
+      // {
+      //   uint8_t dis_status = rx_data[3];
 
-        if (dis_status == 0)
-        {
-          chassis_move.distance = TOFSense_ParseDistanceM(
-              rx_data[0], rx_data[1], rx_data[2]);
-        }
-        break;
-      }
+      //   if (dis_status == 0)
+      //   {
+      //     chassis_move.distance = TOFSense_ParseDistanceM(
+      //         rx_data[0], rx_data[1], rx_data[2]);
+      //   }
+      //   break;
+      // }
       default:
       {
         break;
@@ -289,7 +188,7 @@ void CAN_INIT_STATUS(uint8_t status)
   referee_can_send_data[0] = status;
   HAL_CAN_AddTxMessage(&REFEREE_CAN, &referee_tx_message, referee_can_send_data, &send_mail_box);
 }
-//6020y电机协议
+/*------------------------6020云台电机---------------------*/
 void CAN_cmd_gimbal(int16_t motor1, int16_t motor2, int16_t motor3, int16_t motor4)
 {
   uint32_t send_mail_box;
@@ -308,12 +207,10 @@ void CAN_cmd_gimbal(int16_t motor1, int16_t motor2, int16_t motor3, int16_t moto
 
   HAL_CAN_AddTxMessage(&hcan2, &gimbal_tx_message, gimbal_can_send_data, &send_mail_box);
 }
-
-
-float t1,t2,t3,t4;
 /* ------------------------海泰电机------------------------- */
 void CAN_HT_CMD(uint8_t id, fp32 f_t)
 {
+  float t1,t2,t3,t4;
   uint32_t can_tx_mailbox;
 
   fp32 f_p = 0.0f, f_v = 0.0f, f_kp = 0.0f, f_kd = 0.0f;
@@ -451,7 +348,6 @@ void CAN_LK_POSITION_Control(int32_t angleControl)
   chassis_can_send_data[7] = *((uint8_t *)(&angleControl) + 3);
   HAL_CAN_AddTxMessage(&CHASSIS_CAN, &chassis_tx_message, chassis_can_send_data, &send_mail_box);
 }
-
 void CAN_LK_SPEED_Control(int16_t iqControl, int32_t speedControl)
 {
   uint32_t send_mail_box;
@@ -522,7 +418,7 @@ void CAN_SuperPower_Control(super_power_t super_power_data)
   HAL_CAN_AddTxMessage(&CHASSIS_CAN, &chassis_tx_message, chassis_can_send_data, &send_mail_box);
 }
 
-/* ---------------电机数据反馈函数------------------ */
+//===============数据反馈函数指针=================
 const motor_measure_t *get_yaw_gimbal_motor_measure_point(void)
 {
   return &motor_chassis[4];

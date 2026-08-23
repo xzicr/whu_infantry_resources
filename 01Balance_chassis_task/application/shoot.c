@@ -1,6 +1,5 @@
 #include "main.h"
 #include "cmsis_os.h"
-#include "CAN_receive.h"
 #include "shoot.h"
 #include "pid.h"
 #include "referee.h"

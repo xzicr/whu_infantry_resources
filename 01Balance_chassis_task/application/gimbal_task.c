@@ -1,6 +1,5 @@
 #include "main.h"
 #include "cmsis_os.h"
-#include "CAN_receive.h"
 #include "pid.h"
 #include "gimbal_task.h"
 #include "shoot.h"
@@ -12,12 +11,6 @@
 
 gimbal_control_t gimbal_control;
 extern chassis_move_t chassis_move;
-
-/**
-  * @brief          初始化"gimbal_control"变量，包括pid初始化， 遥控器指针初始化，云台电机指针初始化，陀螺仪角度指针初始化
-  * @param[out]     gimbal_init:"gimbal_control"变量指针.
-  * @retval         none
-  */
 static void gimbal_PID_init(gimbal_PID_t *pid, fp32 maxout, fp32 max_iout, fp32 kp, fp32 ki, fp32 kd)
 {
     if (pid == NULL)

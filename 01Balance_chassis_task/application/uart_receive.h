@@ -3,7 +3,7 @@
 
 #include "main.h"
 #include "usart.h"
-#include "CAN_receive.h"
+#include "gim_cha_protocol.h"
 #include "referee.h"
 
 typedef struct  {

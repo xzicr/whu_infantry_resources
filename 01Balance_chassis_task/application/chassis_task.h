@@ -19,7 +19,9 @@
 #ifndef CHASSIS_TASK_H
 #define CHASSIS_TASK_H
 #include "struct_typedef.h"
-#include "CAN_receive.h"
+#include "can_service.h"
+#include "gim_cha_protocol.h"
+#include "super_power_protocol.h"
 #include "pid.h"
 #include "remote_control.h"
 #include "user_lib.h"

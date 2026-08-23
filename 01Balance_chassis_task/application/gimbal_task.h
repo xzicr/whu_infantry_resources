@@ -2,7 +2,7 @@
 #define GIMBAL_TASK_H
 #include "main.h"
 #include "cmsis_os.h"
-#include "CAN_receive.h"
+#include "can_service.h"
 #include "pid.h"
 #include "shoot.h"
 #include "user_lib.h"

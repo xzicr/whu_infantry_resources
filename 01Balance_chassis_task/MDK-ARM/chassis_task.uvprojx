@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx,USE_HAL_DRIVER,STM32F407xx,ARM_MATH_CM4,__FPU_USED=1U,__FPU_PRESENT=1U,__CC_ARM,ARM_MATH_MATRIX_CHECK,ARM_MATH_ROUNDING</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../bsp/boards;../application;../components/algorithm;../components/algorithm/Include;../components/controller;../components/devices;../components/UI;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../components/filter</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../bsp/boards;../application;../components/algorithm;../components/algorithm/Include;../components/controller;../components/devices;../components/UI;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../components/filter;..\service\CanService;..\protocols</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -556,11 +556,6 @@
               <FilePath>..\application\uart_receive.h</FilePath>
             </File>
             <File>
-              <FileName>CAN_receive.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\application\CAN_receive.c</FilePath>
-            </File>
-            <File>
               <FileName>calibrate_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\calibrate_task.c</FilePath>
@@ -666,11 +661,6 @@
               <FilePath>..\application\oled_task.h</FilePath>
             </File>
             <File>
-              <FileName>protocol.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\application\protocol.h</FilePath>
-            </File>
-            <File>
               <FileName>motor_cmd.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\application\motor_cmd.c</FilePath>
@@ -688,17 +678,37 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>filter</GroupName>
+          <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>balance_filter.c</FileName>
+              <FileName>can_service.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\components\filter\balance_filter.c</FilePath>
+              <FilePath>..\service\CanService\can_service.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>protocols</GroupName>
+          <Files>
+            <File>
+              <FileName>gim_cha_protocol.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\protocols\gim_cha_protocol.h</FilePath>
             </File>
             <File>
-              <FileName>balance_filter.h</FileName>
+              <FileName>motor_protocol.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\components\filter\balance_filter.h</FilePath>
+              <FilePath>..\protocols\motor_protocol.h</FilePath>
+            </File>
+            <File>
+              <FileName>super_power_protocol.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\protocols\super_power_protocol.h</FilePath>
+            </File>
+            <File>
+              <FileName>protocol.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\protocols\protocol.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -889,6 +899,41 @@
               <FileName>bsp_i2c.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\bsp\boards\bsp_i2c.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>UI</GroupName>
+          <Files>
+            <File>
+              <FileName>ui.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\UI\ui.h</FilePath>
+            </File>
+            <File>
+              <FileName>ui_g.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\UI\ui_g.c</FilePath>
+            </File>
+            <File>
+              <FileName>ui_g.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\UI\ui_g.h</FilePath>
+            </File>
+            <File>
+              <FileName>ui_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\components\UI\ui_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>ui_interface.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\UI\ui_interface.h</FilePath>
+            </File>
+            <File>
+              <FileName>ui_types.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\components\UI\ui_types.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2975,41 +3020,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>UI</GroupName>
-          <Files>
-            <File>
-              <FileName>ui.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\components\UI\ui.h</FilePath>
-            </File>
-            <File>
-              <FileName>ui_g.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\components\UI\ui_g.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_g.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\components\UI\ui_g.h</FilePath>
-            </File>
-            <File>
-              <FileName>ui_interface.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\components\UI\ui_interface.c</FilePath>
-            </File>
-            <File>
-              <FileName>ui_interface.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\components\UI\ui_interface.h</FilePath>
-            </File>
-            <File>
-              <FileName>ui_types.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\components\UI\ui_types.h</FilePath>
             </File>
           </Files>
         </Group>

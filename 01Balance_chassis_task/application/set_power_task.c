@@ -1,6 +1,5 @@
 #include "set_power_task.h"
 #include "cmsis_os.h"
-#include "CAN_receive.h"
 #include "main.h"
 void send_setpower_task(void const *pvParamters)
 {

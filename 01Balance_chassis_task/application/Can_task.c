@@ -1,7 +1,6 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "Can_task.h"
-#include "CAN_receive.h"
 #include "referee.h"
 #include "gimbal_task.h"
 extern gimbal_control_t gimbal_control;

@@ -22,7 +22,7 @@
 #include "detect_task.h"
 #include "vofa.h"
 #include "chassis_task.h"
-#include "CAN_receive.h"
+#include "can_service.h"
 #include "shoot.h"
 #include "gimbal_task.h"
 #include "ui.h"

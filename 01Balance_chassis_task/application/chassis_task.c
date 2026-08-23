@@ -1,21 +1,4 @@
-/**
-  ****************************(C) COPYRIGHT 2019 DJI****************************
-  * @file       chassis.c/h
-  * @brief      chassis control task,
-  *             底盘控制任务
-  * @note
-  * @history
-  *  Version    Date            Author          Modification
-  *  V1.0.0     Dec-26-2018     RM              1. done
-  *  V1.1.0     Nov-11-2019     RM              1. add chassis power control
-  *  V2.1.0     Nov-11-2019     xzicr           1. 更新控制逻辑
-  @verbatim
-  ==============================================================================
 
-  ==============================================================================
-  @endverbatim
-  ****************************(C) COPYRIGHT 2019 DJI****************************
-  */
 
 #include "chassis_task.h"
 #include "chassis_behaviour.h"
@@ -24,7 +7,6 @@
 #include "math.h"
 #include "pid.h"
 #include "remote_control.h"
-#include "CAN_receive.h"
 #include "detect_task.h"
 #include "INS_task.h"
 #include "vofa.h"
@@ -32,7 +14,6 @@
 #include "LQR.h"
 #include "usart.h"
 #include "user_lib.h"
-#include "balance_filter.h"
 #include "uart_receive.h"
 
 #define square(x) ((x) * (x))
@@ -257,9 +238,6 @@ static void chassis_init(chassis_move_t *chassis_move_init)
 	PID_init(&chassis_move_init->leg_L_length_pid, PID_POSITION, leg_length_pid, LEG_SET_PID_OUT, LEG_SET_PID_IOUT);
 	PID_init(&chassis_move_init->leg_R_length_pid, PID_POSITION, leg_length_pid, LEG_SET_PID_OUT, LEG_SET_PID_IOUT);
 
-	//轮毂电机滤波初始化   伸腿速度滤波
-    FootMotor_Kalman_Init(chassis_move_init);
-	Leg_angle_Kalman_Init(chassis_move_init);
 
 	chassis_move_init->flag_info.init_flag = 1;
 	chassis_feedback_update(chassis_move_init);
@@ -358,7 +336,7 @@ void chassis_feedback_update(chassis_move_t *fdb)
 		fdb->chassis_posture_info.foot_distance_K += fdb->chassis_posture_info.foot_speed_KF*CHASSIS_CONTROL_TIME;
 	}
 
-    Leg_angle_Kalman_Update(fdb);
+
 	
 	//足端角度解算
 	Forward_kinematic_solution(fdb, fdb->joint_motor_1.position, fdb->joint_motor_1.velocity,
@@ -1308,8 +1286,6 @@ void Chassis_Status_Detect(chassis_move_t *detect)
 }
 void Motor_CMD_Send(chassis_move_t *CMD_Send)
 {
-
-	Record_FootMotor_Control(CMD_Send);
 
 	//为保证轮毂电机高相应速度的要求，单独开任务负责给电机发力矩指令
 	if (CMD_Send->foot_motor_R.motor_mode != MOTOR_FORCE)
