@@ -39,7 +39,7 @@
 
 > 借鉴CADN上 星夜雨夜的调试建议...
 
-![image-20250921185536221](C:/Users/ASUS/AppData/Roaming/Typora/typora-user-images/image-20250921185536221.png)
+![image-20250921185536221](asset/markdown图片文件夹/image-20250921185536221.png)
 
 ## 2.==平衡步兵调试规范==
 
@@ -69,7 +69,7 @@
 
 #### 3.2.2实际力矩极性说明
 
-![image-20251112170750528](C:/Users/ASUS/AppData/Roaming/Typora/typora-user-images/image-20251112170750528.png)
+![image-20251112170750528](asset/markdown图片文件夹/image-20251112170750528.png)
 
 
 
@@ -89,7 +89,7 @@
 
 ### 3.7平衡步兵常见问题
 
-![Snipaste_2025-11-16_11-42-17](markdown图片文件夹/Snipaste_2025-11-16_11-42-17.png)
+![Snipaste_2025-11-16_11-42-17](asset/markdown图片文件夹/Snipaste_2025-11-16_11-42-17.png)
 
 
 
