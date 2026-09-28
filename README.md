@@ -2,6 +2,8 @@
 
 ## 1.介绍
 
+![b3bfc59ccc6c070005cdbaef6b44d0d](asset/picture/b3bfc59ccc6c070005cdbaef6b44d0d.jpg)
+
 基于交✌平步理论分析，港大代码的平衡步兵测试代码
 
 ##### 1.1软件架构
@@ -63,7 +65,7 @@
 
 #### 3.2.1 理论建模时个状态量的正方向
 
-![image-20251116143403943](markdown图片文件夹/image-20251116143403943.png)
+
 
 #### 3.2.2实际力矩极性说明
 
@@ -167,3 +169,6 @@
 
 
 
+# WHU_omni_infantry_26
+
+![3fa602242c650f59a55fe5a6ddc2f8d](asset/picture/3fa602242c650f59a55fe5a6ddc2f8d.jpg)
