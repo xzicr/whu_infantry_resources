@@ -1,0 +1,24 @@
+{
+    "files.associations": {
+        "bsp_i2c.h": "c",
+        "struct_typedef.h": "c",
+        "main.h": "c",
+        "can_task.h": "c",
+        "gimbal_task.h": "c",
+        "freertos.h": "c",
+        "chassis_task.h": "c",
+        "chassis_power_control.h": "c",
+        "can_receive.h": "c",
+        "oled.h": "c",
+        "charconv": "c",
+        "cmsis_os.h": "c",
+        "string": "c",
+        "array": "c",
+        "string_view": "c",
+        "span": "c",
+        "compare": "c",
+        "cstdint": "c",
+        "shoot.h": "c",
+        "random": "c"
+    }
+}

@@ -1,32 +1,29 @@
-# Large local reference material and obsolete backup copies
-/07平衡步兵参考代码/
-/08开源资料(原理了解看上交开源)/
-/WHU_balance_V2.1.4 copy/
-/balance2.1.7Pro/
-# Archives and local backups
+# Local reference material (moved under the legged-wheeled project)
+/whu_legged_wheeled_infantry/开源资料(原理了解看上交开源)/
+
+# Archives and backup files
 *.zip
 *.rar
 *.7z
-*.bak
+*.[Bb]ak
 *~
 
-# Windows / macOS metadata
+# Operating system and editor files
 Thumbs.db
 Desktop.ini
 .DS_Store
-
-# Editor and per-user settings
 .idea/
 .vs/
 *.suo
 *.user
 *.userprefs
+**/.vscode/*.log
+
+# Keil MDK: local options, build products, and debug logs
+*.uvoptx
 *.uvguix.*
 *.uvgui.*
 *.jdebug.user
-**/.vscode/*.log
-
-# Keil MDK build outputs and debug traces
 *.o
 *.obj
 *.d
@@ -45,16 +42,9 @@ Desktop.ini
 *.jlink
 *.jscope
 JLinkLog.txt
+JLinkSettings.ini
 
-# Generic logs, locks, and temporary files
-*.log
-*.lock
-*.tmp
-*.temp
-**/tmp/
-**/temp/
-
-# CMake build trees
+# CMake build products
 [Bb]uild/
 cmake-build-*/
 CMakeFiles/
@@ -62,7 +52,7 @@ CMakeCache.txt
 cmake_install.cmake
 compile_commands.json
 
-# MATLAB / Simulink generated data
+# MATLAB and Simulink generated files
 slprj/
 codegen/
 *.slxc
@@ -70,3 +60,11 @@ codegen/
 *.autosave
 *.m~
 *.mex*
+
+# Temporary files and directories
+*.log
+*.lock
+*.tmp
+*.temp
+tmp/
+temp/
